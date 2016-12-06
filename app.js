@@ -6,6 +6,9 @@ var express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server);
 
+var TwitterBot = require('./bot');
+TwitterBot();
+
 var usernames = [];
 server.listen(process.env.PORT || 3000);
 
