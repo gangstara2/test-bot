@@ -12,7 +12,7 @@ var TwitterBot = function() {
 // find latest tweet according the query 'q' in params
 var retweet = function() {
     var params = {
-        q: '#nodejs, #Nodejs',  // REQUIRED
+        q: '@nodejs OR #nodejs OR #reactjs OR #mongodb OR @reactjs OR #react OR @mongodb OR #meanstack OR @npmjs OR #php OR @php OR @javascript OR @javascript',  // REQUIRED
         result_type: 'recent',
         lang: 'en'
     }
@@ -43,15 +43,15 @@ var retweet = function() {
 
 // grab & retweet as soon as program is running...
 retweet();
-// retweet in every 50 minutes
-setInterval(retweet, 3000000);
+
+setInterval(retweet, 1000000);
 
 // FAVORITE BOT====================
 
 // find a random tweet and 'favorite' it
 var favoriteTweet = function(){
     var params = {
-        q: '#nodejs, #Nodejs',  // REQUIRED
+        q: '@nodejs OR #nodejs OR #reactjs OR #mongodb OR @reactjs OR #react OR @mongodb OR #meanstack OR @npmjs OR #php OR @php OR @javascript OR @javascript',  // REQUIRED
         result_type: 'recent',
         lang: 'en'
     }
@@ -79,8 +79,8 @@ var favoriteTweet = function(){
 }
 // grab & 'favorite' as soon as program is running...
 favoriteTweet();
-// 'favorite' a tweet in every 60 minutes
-setInterval(favoriteTweet, 3600000);
+
+setInterval(favoriteTweet, 600000);
 
 // function to generate a random tweet tweet
 function ranDom (arr) {
