@@ -12,7 +12,7 @@ var TwitterBot = function() {
 // find latest tweet according the query 'q' in params
 var retweet = function() {
     var params = {
-        q: '@nodejs OR #nodejs OR #reactjs OR #mongodb OR @reactjs OR #react OR @mongodb OR #meanstack OR @npmjs OR #php OR @php OR @javascript OR @javascript',  // REQUIRED
+        q: '@nodejs OR #nodejs OR #reactjs OR #mongodb OR @reactjs OR #react OR @mongodb OR #mernstack OR @npmjs OR #php OR @php OR @javascript OR #javascript OR @functionalprograming OR #functionalprograming OR @es6 OR #es6 OR @es2017 OR #es2017 OR @redux OR #redux OR @reduxsaga OR #reduxsaga OR @graphql OR #graphql',  // REQUIRED
         result_type: 'recent',
         lang: 'en'
     }
@@ -39,12 +39,12 @@ var retweet = function() {
             console.log('Something went wrong while SEARCHING...');
         }
     });
-}
+};
 
 // grab & retweet as soon as program is running...
 retweet();
 
-setInterval(retweet, 200000);
+setInterval(retweet, 3600000);
 
 // FAVORITE BOT====================
 
@@ -80,7 +80,7 @@ var favoriteTweet = function(){
 // grab & 'favorite' as soon as program is running...
 favoriteTweet();
 
-setInterval(favoriteTweet, 100000);
+setInterval(favoriteTweet, 4800000);
 
 // function to generate a random tweet tweet
 function ranDom (arr) {
