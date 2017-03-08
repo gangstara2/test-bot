@@ -12,7 +12,7 @@ var TwitterBot = function() {
 // find latest tweet according the query 'q' in params
 var retweet = function() {
     var params = {
-        q: '@nodejs OR #nodejs OR #reactjs OR #mongodb OR @reactjs OR #react OR @mongodb OR #mernstack OR @npmjs OR #php OR @php OR @javascript OR #javascript OR @functionalprograming OR #functionalprograming OR @es6 OR #es6 OR @es2017 OR #es2017 OR @redux OR #redux OR @reduxsaga OR #reduxsaga OR @graphql OR #graphql',  // REQUIRED
+        q: '@nodejs OR #nodejs OR #reactjs OR #mongodb OR @reactjs OR #react OR @mongodb OR #mernstack @mernstack OR @npmjs OR #php OR @php OR @javascript OR #javascript OR @functional OR #functional OR @es6 OR #es6 OR @es2017 OR #es2017 OR @redux OR #redux OR @reduxsaga OR #reduxsaga OR @graphql OR #graphql',  // REQUIRED
         result_type: 'recent',
         lang: 'en'
     }
@@ -51,7 +51,7 @@ setInterval(retweet, 3600000);
 // find a random tweet and 'favorite' it
 var favoriteTweet = function(){
     var params = {
-        q: '@nodejs OR #nodejs OR #reactjs OR #mongodb OR @reactjs OR #react OR @mongodb OR #meanstack OR @npmjs OR #php OR @php OR @javascript OR @javascript',  // REQUIRED
+        q: '@nodejs OR #nodejs OR #reactjs OR #mongodb OR @reactjs OR #react OR @mongodb OR #mernstack @mernstack OR @npmjs OR #php OR @php OR @javascript OR #javascript OR @functional OR #functional OR @es6 OR #es6 OR @es2017 OR #es2017 OR @redux OR #redux OR @reduxsaga OR #reduxsaga OR @graphql OR #graphql',  // REQUIRED
         result_type: 'recent',
         lang: 'en'
     }
