@@ -2,48 +2,48 @@ const https = require('https')
 const fs = require('fs')
 const webhookUri = require('./config').slack_webhook_url
 const OldReviewData = fs.readFileSync('./review.json', 'utf8') || ''
-const Slack = require('slack-node');
+const Slack = require('slack-node')
 
 const sendSlackWebHook = (data) => {
 	const { overall_rating, reviews } = data
 	const newestReview = reviews[0]
-	console.log(overall_rating, newestReview)
 	const rate = Number(newestReview.star_rating)
+	// const rate = 1
 	const color = rate === 5 ? 'good' : rate < 4 && rate > 2 ? 'warning' : 'danger'
-	const slack = new Slack();
-	slack.setWebhook(webhookUri);
+	const text = rate === 5 ? '>*We have just received new good review :heart_eyes:*' : rate < 4 && rate > 2 ? '>*We have just received new review :neutral_face:*' : '>*We have just received new bad review :disappointed_relieved:*'
+	const slack = new Slack()
+	slack.setWebhook(webhookUri)
 	slack.webhook({
-		channel: "#reviews",
-		username: "webhookbot",
-		text: "Notification about PageFly reviews update",
-		"attachments": [
+		channel: '#reviews',
+		username: 'PageFly Reviews Bot',
+		text,
+		'attachments': [
 			{
-				"fallback": JSON.stringify(newestReview),
+				'fallback': JSON.stringify(newestReview),
 				color,
-				"pretext": "",
-				"author_name": "PageFly Reviews Bot",
-				"author_link": "https://apps.shopify.com/pagefly",
-				"author_icon": "https://cdn.shopify.com/s/files/applications/f85ee597169457da8ee70b6652cae768_512x512.png",
-				"title": newestReview.shop_name,
-				"title_link": "https://"+ newestReview.shop_domain,
-				"text": newestReview.body,
-				"fields": [
+				'pretext': '',
+				// "author_name": "PageFly Reviews Bot",
+				'author_link': 'https://apps.shopify.com/pagefly',
+				'author_icon': 'https://cdn.shopify.com/s/files/applications/f85ee597169457da8ee70b6652cae768_512x512.png',
+				'title': newestReview.shop_name,
+				'title_link': 'https://' + newestReview.shop_domain,
+				'text': 'Message: ' + newestReview.body,
+				'fields': [
 					{
-						"title": "New Rating:",
-						"value": newestReview.star_rating + ' star',
-						"short": false
+						'title': 'New Rating:',
+						'value': rate + ' star'
 					}
 				],
-				"image_url": "http://my-website.com/path/to/image.jpg",
-				"thumb_url": "http://example.com/path/to/thumb.png",
-				"footer": " ",
-				"footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
-				"ts": Math.floor((new Date).getTime()/1000)
+				'image_url': 'http://my-website.com/path/to/image.jpg',
+				'thumb_url': 'http://example.com/path/to/thumb.png',
+				'footer': '<https://apps.shopify.com/pagefly#reviews|Check review>',
+				'footer_icon': 'https://platform.slack-edge.com/img/default_application_icon.png',
+				'ts': Math.floor((new Date).getTime() / 1000)
 			}
 		]
-	}, function(err, response) {
-		console.log(response);
-	});
+	}, function (err, response) {
+		console.log(response)
+	})
 
 }
 const SlackWebHook = () => {
