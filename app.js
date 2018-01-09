@@ -6,7 +6,7 @@ const express = require('express'),
 const SlackWebhook = require('./slack-webhook-bot')
 server.listen(process.env.PORT || 3000);
 
-setInterval(SlackWebhook, 300000)
+setInterval(SlackWebhook, 120000)
 SlackWebhook()
 
 app.get('/', (req, res) => {

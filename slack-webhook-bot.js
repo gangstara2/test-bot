@@ -1,21 +1,28 @@
 const https = require('https')
 const fs = require('fs')
 const webhookUri = require('./config').slack_webhook_url
-const OldReviewData = fs.readFileSync('./review.json', 'utf8') || ''
 const Slack = require('slack-node')
 
 const sendSlackWebHook = (data) => {
 	const { overall_rating, reviews } = data
 	const newestReview = reviews[0]
 	const rate = Number(newestReview.star_rating)
-	// const rate = 1
-	const color = rate === 5 ? 'good' : rate < 4 && rate > 2 ? 'warning' : 'danger'
-	const text = rate === 5 ? '>*We have just received new good review :heart_eyes:*' : rate < 4 && rate > 2 ? '>*We have just received new review :neutral_face:*' : '>*We have just received new bad review :disappointed_relieved:*'
+	const color = rate === 5 ? 'good' : rate < 5 && rate > 2 ? 'warning' : 'danger'
+	const text = rate === 5 ? '>*We have just received new good review :heart_eyes:*' : rate < 5 && rate > 2 ? '>*We have just received new review :neutral_face:*' : '>*We have just received new bad review :disappointed_relieved:*'
+	let star = '', i = 0
+	while (i < 5) {
+		if (i < rate) {
+			star += '★'
+		} else {
+			star += '☆'
+		}
+		i++
+	}
 	const slack = new Slack()
 	slack.setWebhook(webhookUri)
 	slack.webhook({
 		channel: '#reviews',
-		username: 'PageFly Reviews Bot',
+		username: 'PageFly Reviews',
 		text,
 		'attachments': [
 			{
@@ -27,11 +34,11 @@ const sendSlackWebHook = (data) => {
 				'author_icon': 'https://cdn.shopify.com/s/files/applications/f85ee597169457da8ee70b6652cae768_512x512.png',
 				'title': newestReview.shop_name,
 				'title_link': 'https://' + newestReview.shop_domain,
-				'text': 'Message: ' + newestReview.body,
+				// 'text': '*Message:* ' + newestReview.body,
 				'fields': [
 					{
-						'title': 'New Rating:',
-						'value': rate + ' star'
+						'title': star,
+						value: newestReview.body
 					}
 				],
 				'image_url': 'http://my-website.com/path/to/image.jpg',
@@ -46,8 +53,11 @@ const sendSlackWebHook = (data) => {
 	})
 
 }
+let count = 0
 const SlackWebHook = () => {
-	console.log('collecting PageFly reviews data...')
+	const OldReviewData = fs.readFileSync('./review.json', 'utf8') || ''
+	console.log(new Date(), ':: collecting PageFly reviews data... :: count:', count)
+	count++
 	https.get('https://apps.shopify.com/pagefly/reviews.json', (resp) => {
 		let data = ''
 		// A chunk of data has been recieved.
