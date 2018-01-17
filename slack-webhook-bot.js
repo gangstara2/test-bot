@@ -5,10 +5,11 @@ const Slack = require('slack-node')
 
 const sendSlackWebHook = (data) => {
 	const { overall_rating, reviews } = data
+	console.log(reviews.length)
 	const newestReview = reviews[0]
 	const rate = Number(newestReview.star_rating)
-	const color = rate === 5 ? 'good' : rate < 5 && rate > 2 ? 'warning' : 'danger'
-	const text = rate === 5 ? '>*We have just received new good review :heart_eyes:*' : rate < 5 && rate > 2 ? '>*We have just received new review :neutral_face:*' : '>*We have just received new bad review :disappointed_relieved:*'
+	const color = rate === 5 ? 'good' : rate < 5 && rate > 3 ? 'warning' : 'danger'
+	const text = rate === 5 ? '>*We have just received new good review :heart_eyes:*' : rate < 5 && rate > 3 ? '>*We have just received new review :neutral_face:*' : '>*We have just received new bad review :disappointed_relieved:*'
 	let star = '', i = 0
 	while (i < 5) {
 		if (i < rate) {
@@ -55,31 +56,38 @@ const sendSlackWebHook = (data) => {
 }
 let count = 0
 const SlackWebHook = () => {
-	const OldReviewData = fs.readFileSync('./review.json', 'utf8') || ''
-	console.log(new Date(), ':: collecting PageFly reviews data... :: count:', count)
-	count++
-	https.get('https://apps.shopify.com/pagefly/reviews.json', (resp) => {
-		let data = ''
-		// A chunk of data has been recieved.
-		resp.on('data', (chunk) => {
-			data += chunk
-		})
+	try {
+		const OldReviewData = fs.readFileSync('./review.json', 'utf8') || ''
+		console.log(new Date(), ':: collecting PageFly reviews data... :: count:', count)
+		count++
+		https.get('https://apps.shopify.com/pagefly/reviews.json', (resp) => {
+			let data = ''
+			// A chunk of data has been recieved.
+			resp.on('data', (chunk) => {
+				data += chunk
+			})
 
-		// The whole response has been received. Print out the result.
-		resp.on('end', () => {
-			fs.writeFileSync('./review.json', data)
-			if (data !== OldReviewData) {
+			// The whole response has been received. Print out the result.
+			resp.on('end', () => {
 				const newReviewData = JSON.parse(data)
-				sendSlackWebHook(newReviewData)
-			} else {
-				console.log('no update about reviews on PageFly!')
-			}
+				const oldData = JSON.parse(OldReviewData)
+				console.log(newReviewData.reviews.length , oldData.reviews.length)
+				if (newReviewData.reviews && oldData.reviews && newReviewData.reviews.length !== oldData.reviews.length) {
+					console.log('sending slack webhook')
+					fs.writeFile('./review.json', data, () => {
+						sendSlackWebHook(newReviewData)
+					})
+				} else {
+					console.log('no update about reviews on PageFly!')
+				}
+			})
+
+		}).on('error', (err) => {
+			console.log('Error: ' + err.message)
 		})
-
-	}).on('error', (err) => {
-		console.log('Error: ' + err.message)
-	})
-
+	} catch (e) {
+		console.log(e)
+	}
 }
 
 module.exports = SlackWebHook
